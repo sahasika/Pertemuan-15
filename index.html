@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <title>Data Nilai Mahasiswa</title>
+    <style type="text/css">
+        .sptombol {padding-top: 10px;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-4">
+                <form name="frmInput">
+                    <label for="NIM">NIM : </label>
+                    <input type="text" class="form-control" id="txNIM">
+
+                    <label for="kelas">Kelas : </label>
+                    <input type="text" class="form-control" id="txKLS">
+
+                    <label for="IDMK">Kode Mata Kuliah : </label>
+                    <input type="text" class="form-control" id="txIDMK">
+
+                    <div class="form-group sptombol">
+                        <button type="button" class="btn btn-primary" id="cmdcari">Cari Data</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-4">
+                <h3>Data Nilai</h3>
+                <div id="lbNIM">NIM: <span id="vtxNIM">:99999999</span></div>
+                <div id="lbnama">Nama <span id="vtxNAMA">: NAMA MAHASISWA</span></div>
+                <div>
+                    <h3>Data NILAI</h3>
+                    <div id="VNilai"></div>
+                </div>
+            </div>
+            <div class="col-4">
+                <h3>Data Kehadiran</h3>
+                <div>
+                    <div id="VHadir"></div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</body>
+<script src="jquery-3.1.0.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $("#cmdcari").click(function(){
+            var nim = $("txNIM").val();
+            var kls = $("txKLS").val();
+            var idmk = $("txIDMK").val();
+            var prm = "getpress-"+idmk+"-"+nim+"-"+kls+".html";
+            $.ajax({
+                type: "GET";
+                url: "https://mhstiki.artha.web.id/api/"+prm,
+                dataType: "json",
+                success: function(data){
+                    var vnim = ": "+data{"NIM"};
+                    var vnama = ": "+data{"NAMA"};
+                    $("#vtxNIM").html(vnim);
+                    $("#vtxNAMA").html(vnama);
+
+                    var nnilai = "<ol><ul>Nilai Aktif :"+data{"N_AKTIF"}+"</ul><ul>Nilai Tugas :"+data{"N_TUGAS"}+"</ul><ul>Nilai QUIS:"+data{N_QUIS}+"</ul><ul>Nilai UTS:"+data{"N_UTS"}+"</ul><ul>Nilai UAS"+data{"N_UAS"}+"</ul><ul>Nilai Akhir:"+data{"N_NA"}+"</ul><ul>Grade:"+data{"GRADE"}+"</ul></ol>";
+                        $("VNilai").html(nnilai);
+
+                        var jmlperetmuan = 16;
+                        var jhadir = jmlpertemuan - parseInt(data{"MANGKIR"});
+                        var hadir = "<h3>Presensi<h/3>Jumlah Tidak Kehadiran:"+jhadir+"("+data{"PROS_HADIR"};
+                        $("#VHadir").html(hadir);
+                }
+
+            });
+        });
+    });
+</script>
+</html>
